@@ -1,11 +1,11 @@
-const pool = require('./db');
+const pool = require("./db");
 
 const createTables = async () => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
 
-    await connection.execute(`
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(50) UNIQUE NOT NULL,
@@ -19,7 +19,7 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    await connection.execute(`
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS stations (
         id INT AUTO_INCREMENT PRIMARY KEY,
         station_code VARCHAR(10) UNIQUE NOT NULL,
@@ -38,7 +38,7 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    await connection.execute(`
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS bikes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         bike_code VARCHAR(20) UNIQUE NOT NULL,
@@ -55,7 +55,7 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    await connection.execute(`
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS ride_records (
         id INT AUTO_INCREMENT PRIMARY KEY,
         bike_id INT NOT NULL,
@@ -81,7 +81,7 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    await connection.execute(`
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS dispatch_tasks (
         id INT AUTO_INCREMENT PRIMARY KEY,
         task_code VARCHAR(20) UNIQUE NOT NULL,
@@ -106,7 +106,7 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    await connection.execute(`
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS fault_reports (
         id INT AUTO_INCREMENT PRIMARY KEY,
         report_code VARCHAR(20) UNIQUE NOT NULL,
@@ -129,11 +129,11 @@ const createTables = async () => {
     `);
 
     await connection.commit();
-    console.log('数据库表创建成功');
+    console.log("数据库表创建成功");
     return true;
   } catch (error) {
     await connection.rollback();
-    console.error('创建表失败:', error);
+    console.error("创建表失败:", error);
     throw error;
   } finally {
     connection.release();
